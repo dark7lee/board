@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="buser">
+
+<!-- 로그인 -->
+  <select id="getLogin" parameterType="map" resultType="BUserVO">
+		select * from webmember where mem_id = #{mem_id} and mem_pass = #{mem_pass}
+  </select>
+
+
+  <!-- 게시글 페이지 list 조회 -->
+  <select id="getBoardPageList" resultType="BoardVO" parameterType="map">
+    select * from (
+    	select lpad(' ',(level-1)*4) || board_title "board_title", rownum rn , board_seq, board_tboard_seq
+    	from board
+    	where board_tboard_seq=#{tboard_seq}
+    		start with board_p_seq is null
+    		connect by prior board_seq = board_p_seq
+    		order siblings by board_group_seq desc)
+    	where rn between (#{page}-1) * #{pageSize}+1 and #{page} * #{pageSize} 
+		order by rn
+  </select>
+  
+	<!-- 전체 게시글 건수 조회 -->
+	<select id="getBoardTotalCnt" resultType="integer">
+		select count(*) from board
+	</select>
+
+	
+	
+</mapper>

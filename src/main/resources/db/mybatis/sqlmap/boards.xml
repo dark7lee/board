@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boards">
+
+ 	<!-- 게시글 상세정보 조회 -->
+	<select id="getBoard" resultType="BoardVO" parameterType="Integer">
+		select * from BOARD where BOARD_TBOARD_SEQ = #{TBOARD_SEQ}
+	</select>
+	
+	<!-- 게시글 생성 -->
+	<insert id="insertBoard" parameterType="map">
+		insert into board 
+			(board_seq, board_tboard_seq, board_group_seq, board_title, board_content, board_mem_id)
+    		values(board_seq.nextval, #{board_tboard_seq}, board_group_seq.nextval, #{board_title}, #{board_content}, #{board_mem_id})
+	</insert>
+	
+	<!-- 파일 생성 -->
+	<insert id="insertFile" parameterType="String">
+		insert into fileadd 
+			(file_seq, file_board_seq, file_path)
+    		values(file_seq.nextval, file_board_seq.nextval, #{file_path})
+	</insert>
+	
+<!-- 게시글 불러오기 -->
+	<select id="getBoardAll" resultType="BoardVO" parameterType="Integer">
+		select * from board where board_seq=#{board_seq}
+	</select>
+	
+	<!-- 게시 파일 불러오기 -->
+	<select id="getFile" resultType="FileVO" parameterType="String">
+		select * from fileadd where file_path=#{file_path}
+	</select>
+	
+<!-- 게시글 수정하기 -->
+	<update id="updateBoard" parameterType="BoardVO">
+		update board 
+			set board_title=#{board_title}, board_content=#{board_content} 
+			where board_seq=#{board_seq}
+	</update>
+	
+	<!-- 게시글 삭제하기 -->
+	<update id="deleteBoard" parameterType="BoardVO">
+		delete from board where board_seq=#{board_seq}
+	</update>
+	
+	
+	
+</mapper>
